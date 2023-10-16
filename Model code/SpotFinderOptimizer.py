@@ -35,12 +35,12 @@ warnings.filterwarnings("ignore")
 
 from google.colab import drive
 
-data=pd.read_csv('/content/Book1.csv')
+data=pd.read_csv('/content/InputData.csv')
 data.head(2)
 
 #initialize and gather data
 
-data = pd.read_csv('/content/Book1.csv')
+data = pd.read_csv('/content/InputData.csv')
 
 data.astype(np.float32)
 
@@ -131,6 +131,18 @@ with open("model.json", "w") as json_file:
 # serialize weights to HDF5
 model.save_weights("model.h5")
 print("Saved model to disk")
+pred = model.predict(X_test)
+pred
+
+trainpreds = model.predict(X_train)
+
+from sklearn.metrics import mean_absolute_error
+pred_mae=mean_absolute_error(y_train, trainpreds)
+
+
+print(mean_absolute_error(y_train, trainpreds)) # train
+print(mean_absolute_error(y_test, pred)) # test
+out_preds=(pred,trainpreds)
 
 Predictors=['router_x',	'router_y',	'cell_x',	'cell_y',
             'pass_0',	'pass_dis_0',	'pass_type_0',	'pass_mat_0',
@@ -149,6 +161,8 @@ TestingData['Predicted_Loss']=pred[:,0]
 TestingData['Error_Loss']=abs(y_test[:,0]-pred[:,0])/(y_test[:,0])*100
 
 TestingData.head(10)
+
+np.savetxt("/conent/o.csv",TestingData,delimiter=",")
 
 pred
 
